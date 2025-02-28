@@ -1,3 +1,25 @@
+## Git
+
+
+(git init) 
+git branch 
+git branch -M main (rename local branch to main)
+git branch
+
+  
+git add .   (adding all files to commit) 
+
+git commit -m "commit message" 
+
+git remote add origin https://github.com/your_username/your_repository_name.git  // Or the SSH URL
+
+git push -u origin main
+
+
+
+
+
+
 ## Backend 
 
 body-parser extracts the entire body portion of an incoming request stream and exposes it on req.body 
@@ -82,19 +104,13 @@ and mongodb+srv line (connection string) - Copy - Close - add to config-default 
 edit mongodb+srv://mariia:<db_password> with mongodb+srv://mariia:test 
 
 
-## Git
+package.json - scripts: 
+server - backend 
+client - frontend 
+dev - backend + frontend ("dev": "concurrently \"npm run server\" \"npm run client\""): npm run dev
 
 
-(git init) 
-git branch 
-git branch -M main (rename local branch to main)
-git branch
-
-  
-git add .   (adding all files to commit) 
-
-git commit -m "commit message" 
-
-git remote add origin https://github.com/your_username/your_repository_name.git  // Or the SSH URL
-
-git push -u origin main
+Creating frontend (client): 
+in the root of the project: npx create-react-app client 
+to add frontend project in the folder client 
+to install npm different packages only in frontend: cd client/ and from the client folder install 
