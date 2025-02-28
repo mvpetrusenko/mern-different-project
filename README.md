@@ -79,4 +79,22 @@ set user and password to access database: mariia - test
 Click the Create Database User button 
 Click Choose a connection method button - Drivers - it will show Node.js driver version 
 and mongodb+srv line (connection string) - Copy - Close - add to config-default json line to mongoURI 
-edit mongodb+srv://mariia:<db_password> with mongodb+srv://mariia:test
+edit mongodb+srv://mariia:<db_password> with mongodb+srv://mariia:test 
+
+
+## Git
+
+
+(git init) 
+git branch 
+git branch -M main (rename local branch to main)
+git branch
+
+  
+git add .   (adding all files to commit) 
+
+git commit -m "commit message" 
+
+git remote add origin https://github.com/your_username/your_repository_name.git  // Or the SSH URL
+
+git push -u origin main
