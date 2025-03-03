@@ -6,10 +6,13 @@ const mongoose = require('mongoose')
 
 // app - server 
 
-const app = express('/api/auth', require('./routes/auth.routes')) 
+const app = express() 
+
+// to get request body not undefined, but as json
+app.use(express.json({ extended: true }))
 
 // to register routes (from frontedn to backend)
-app.use()
+app.use('/api/auth', require('./routes/auth.routes'))
 
 // constant port to get port from config-default.json 
 // if port is not defined, default ( || ) port will be 5000 

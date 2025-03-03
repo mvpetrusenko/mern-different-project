@@ -10,7 +10,20 @@ export const useHttp = () => {
     // try - catch: to work with operator async await 
     const request = useCallback(async (url, method='GET', body = null, headers = {}) => { 
         setLoading(true)
-        try {
+        try { 
+
+            // check if body is passed to request function 
+            // if there is a body, turn body into a string and add header
+            // if not body will be null, and it won`t take into account 
+            // key - content-type 
+            // in console.log in terminale - data from server (backend) 
+            // in console in DevTools - from frontend (Network - request payload)
+            if (body) {
+                body.JSON.stringify(body) 
+                headers['Content-Type'] = 'application/json'
+            }
+
+
             const response = await fetch(url, { method, body, headers }) 
             // to parse response 
             const data = await response.json() 

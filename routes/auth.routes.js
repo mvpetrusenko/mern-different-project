@@ -21,6 +21,7 @@ router.post('/register',
     ],
     async (request, response) => {
     try { 
+        console.log('Body: ', request.body)
 
         const errors = validationResult(request) 
 
