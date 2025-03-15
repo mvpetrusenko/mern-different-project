@@ -1,5 +1,8 @@
 {
     "port": 5000, 
-    "jwtSecret": "petrusenko mern",
+    "jwtSecret": "petrusenko mern", 
     "mongoUri": "mongodb+srv://mariia:test@cluster0.eu6w7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    
 }
+
+

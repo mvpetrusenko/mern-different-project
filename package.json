@@ -2,7 +2,8 @@
   "name": "mern-different-project",
   "version": "1.0.0",
   "description": "backend for react javascript different project",
-  "main": "app.js",
+  "main": "app.js", 
+  "type": "module",
   "scripts": {
     "start": "node app.js",
     "server": "nodemon app.js",
