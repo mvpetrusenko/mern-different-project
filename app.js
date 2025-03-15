@@ -9,7 +9,7 @@
 
 
 
-import express from 'express';
+import express, { response } from 'express';
 import jwt from 'jsonwebtoken'; 
 import mongoose from 'mongoose'; 
 import bcrypt from 'bcryptjs';
@@ -50,20 +50,88 @@ app.get('/', (request, response) => {
 // this token will be returned to the response to client 
 // to decrypt this token - on website jwt.io and paste token to encoded section
 
-app.post('/login', (request, response) => { 
-    // in IDE console will be: {"email": "test@test.com", "password": "12345"} 
-    console.log(request.body); 
+// app.post('/login', (request, response) => { 
+//     // in IDE console will be: {"email": "test@test.com", "password": "12345"} 
+//     console.log(request.body); 
 
-    const token = jwt.sign({
-        email: request.body.email, 
-        fullName: 'Tom',
-    }, 'secret123', );
+//     const token = jwt.sign({
+//         email: request.body.email, 
+//         fullName: 'Tom',
+//     }, 'secret123', );
 
-    response.json({
-        success: true, 
-        token,
-    });
+//     response.json({
+//         success: true, 
+//         token,
+//     });
+// }); 
+
+
+
+
+
+// to login - find such user in database 
+// in Insomnia: POST: http://localhost:5000/login with 
+// body: {"email": "test@test.com", "password": "12345"} 
+// response in Insomnia: {"_id": "67d580c6e1e4d09f02427edc", 
+// "fullName": "Tom", "email": "test@test.com", 
+// "createdAt": "2025-03-15T13:29:42.706Z", 
+// "updatedAt": "2025-03-15T13:29:42.706Z", "__v": 0, "token": "eyJ"} 
+// try to type in body wrong password: 
+// {"message": "Invalid login or password"}
+app.post('/login', async (request, response) => { 
+    try {
+        const user = await UserModel.findOne({ email: request.body.email }); 
+
+        // if user not found stop furhter code with return
+        if (!user) {
+            return response.status(404).json({
+                message: 'User not found'
+            })
+        } 
+
+        const isValidPassword = await bcrypt.compare(request.body.password, user._doc.passwordHash); 
+
+        // !! response.status(404) NOT REQUEST! because 
+        // request does not have status method
+        if (!isValidPassword) {
+            return response.status(400).json({
+                message: 'Invalid login or password'
+            })
+        } 
+
+        const token = jwt.sign({
+            _id: user._id
+        }, 'secret123', 
+        {
+            expiresIn: '30d', 
+        }
+    );
+
+    const { passwordHash, ...userData } = user._doc;
+
+        response.json({
+            ...userData,
+            token,
+        });
+
+    } catch (error) {
+        console.log(error)
+        response.status(500).json({
+            message: 'Cannot log in',
+        });
+    }
 }); 
+
+
+
+
+
+
+
+
+
+
+
 
 
 // to validate data from client npm install express-validator 
@@ -158,6 +226,20 @@ app.post('/registration', registrationValidation, async (request, response) => {
 // token helps to understand if user is authorized, create/delete articles ... 
 // token is a key to access private info (from backend, database) 
 // npm install jsonwebtoken and import it: import jwt from 'jsonwebtoken'; 
+
+
+
+// check if can get info about oneself: 
+// if this user using token can get info about his profile 
+// folder utils/checkAuth.js
+app.get('/auth/me', (request, response) => {
+    try {
+        dd
+    } catch (error) {
+        gg
+    }
+});
+
 
 
 
