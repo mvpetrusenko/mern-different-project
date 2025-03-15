@@ -118,3 +118,27 @@ Use import/export from frontend in Node.js: in package json add "type": "module"
 Now in app.js (node.js) we can write ecma script (import instead of require)
 
 mongodb - cluster - connect - connect your application (copy link: mobgodb-srv...)
+
+Create database in mongodb compass:
+add between mongodb.net/ and ? blog (mongodb.net/blog?)
+mongodb+srv://mariia:test@cluster0.eu6w7.mongodb.net/blog?retryWrites=true&w=majority&appName=Cluster0
+to connect not only to mongodb server, but to mongodb database
+refresh page in mongodb compass
+in mongodb compass appears folder blog with table users
+via Insomnia send post /registration request with body
+in Insomnis response:
+{
+"fullName": "Tom",
+"email": "test@test.com",
+"passwordHash": "$2b$10$vjkJAjtvlFG7GsNv2HSijeP74c/VGY1zKIYZ/NR7hX.UvtX03VI5O",
+"\_id": "67d578ee10d1986b6a2098a2",
+"createdAt": "2025-03-15T12:56:14.879Z",
+"updatedAt": "2025-03-15T12:56:14.879Z",
+"\_\_v": 0
+}
+
+refresh mongodb compass folder blog-users: appears the same response as in Insomnia - it is a document with
+the info about created user
+
+For not to change body email... - before sending Insomnia request with the same body - delete
+user from mongodb compass

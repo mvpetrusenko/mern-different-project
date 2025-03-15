@@ -12,11 +12,16 @@
 import express from 'express';
 import jwt from 'jsonwebtoken'; 
 import mongoose from 'mongoose'; 
+import bcrypt from 'bcryptjs';
+import { validationResult } from 'express-validator' 
+
+import { registrationValidation } from './validations/auth.js' 
+import UserModel from './models/User.js'
 
 // then - check if connection to mongodb is real 
 // after saving code in IDE console: You are connected to database 
 // create user model (models/User.js)
-mongoose.connect('mongodb+srv://mariia:test@cluster0.eu6w7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', 
+mongoose.connect('mongodb+srv://mariia:test@cluster0.eu6w7.mongodb.net/blog?retryWrites=true&w=majority&appName=Cluster0', 
 
 ).then(() => console.log('You are connected to database'))
 .catch((error) => console.log('Not connected to database', error));
@@ -60,6 +65,93 @@ app.post('/login', (request, response) => {
     });
 }); 
 
+
+// to validate data from client npm install express-validator 
+// folder validations 
+// first check registration data for validation, if ok - handle post request 
+// before sending request via Insomnia, start server in IDE console: npm run server
+// to send from Insomnia (POST: http://localhost:5000/registration) and 
+// body: {"email": "test@test.com", "password": "12345", "fullName": "Tom"} 
+// in Insomnia response will be: {"success": true} 
+// if send Insomnia request with wrong email (testtest.com) - response 400 with message "Invalid value" 
+// async - to use await 
+app.post('/registration', registrationValidation, async (request, response) => { 
+    try {
+        // validationResult(request) - parse (get out) all from the request
+        const errors = validationResult(request); 
+        // if there are errors: 
+        // return all errors - errors.array
+        if(!errors.isEmpty()) {
+            return response.status(400).json(errors.array());
+        } 
+
+
+        // crypt password from Insomnia request: 
+        // generate salt (algorithm of crypt) 
+        // hash - crypted password
+        const password = request.body.password; 
+        const salt = await bcrypt.genSalt(10); 
+        const hash = await bcrypt.hash(password, salt);
+
+
+        // prepare document for user registration: 
+        // to email will be passed request.body.email 
+        // in Insomnia password is passed like '1234' because frontend do not have to crypt password, but 
+        // backend have to crypt password - npm install bcrypt
+    
+        const doc = new UserModel({
+            email: request.body.email, 
+            fullName: request.body.fullName,  
+            passwordHash: hash, 
+            // passwordHash: request.body.passwordHash, - before 
+            // writing const passwordHash = await bcrypt.hash(password, salt);
+
+        }); 
+
+
+        // create user in mongodb: 
+        // save document in database
+        const user = await doc.save();
+
+
+        // create token after successful registration: 
+        // data to be crypt in token (id from response in Insomnia and mongodb compass) 
+        // crypt id, because knowing id one can get all info about the user 
+        // expiresIn - lifetime of token
+        const token = jwt.sign({
+            _id: user._id
+        }, 'secret123', 
+        {
+            expiresIn: '30d', 
+        }
+    );
+
+        // if there are NO errors: 
+        // response.json({ - before writing const user = await doc.save();
+        //     success: true, 
+        // }); 
+        // mongodb compass - gui for mongodb - connect using mongodb+srv (New connection - connect)
+
+
+        // not show password from response: 
+        // via destructure get passwordHash, but do not use it
+        const { passwordHash, ...userData } = user._doc;
+
+
+
+        // response.json(user); - before writing token expires 
+        response.json({
+            // ...user._doc, - with showing password in response 
+            ...userData,
+            token,
+        });
+    } catch (error) {
+        console.log(error)
+        response.status(500).json({
+            message: 'Cannot register',
+        });
+    }
+}); 
 
 // use JWT token (JSON web token library) to generate token while doing authorization 
 // token to address to secured requests on our app 
