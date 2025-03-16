@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 // export default mongoose.model('User', UserScheme) - model name User with scheme UserScheme 
 // mvc - model view controller
 const UserScheme = new mongoose.Schema({
-    fullName: {
+    firstName: {
         type: String, 
         required: true,
     }, 

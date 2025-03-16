@@ -17,7 +17,10 @@ import { validationResult } from 'express-validator'
 
 import { registrationValidation } from './validations/auth.js' 
 import UserModel from './models/User.js' 
-import checkAuth from './utils/checkAuth.js'
+import checkAuth from './utils/checkAuth.js' 
+
+import cors from 'cors' 
+
 
 // then - check if connection to mongodb is real 
 // after saving code in IDE console: You are connected to database 
@@ -32,7 +35,9 @@ mongoose.connect('mongodb+srv://mariia:test@cluster0.eu6w7.mongodb.net/blog?retr
 const app = express() 
 
 // for express to read json format: 
-app.use(express.json())
+app.use(express.json()) 
+
+app.use(cors());
 
 // if on app get request comes on main route - function will be executed 
 // function returns 2 parameters: request and response
@@ -170,7 +175,7 @@ app.post('/registration', registrationValidation, async (request, response) => {
     
         const doc = new UserModel({
             email: request.body.email, 
-            fullName: request.body.fullName,  
+            firstName: request.body.firstName,  
             passwordHash: hash, 
             // passwordHash: request.body.passwordHash, - before 
             // writing const passwordHash = await bcrypt.hash(password, salt);

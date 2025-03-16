@@ -143,9 +143,14 @@ the info about created user
 For not to change body email... - before sending Insomnia request with the same body - delete
 user from mongodb compass
 
+---
+
+npm install axios
+
 To Frontend:
 
-file axios.js
+file axios.js:
+
 import axios from 'axios'
 
 const instance = axios.create({
@@ -193,3 +198,6 @@ setLoading(true);
     }
 
 }
+
+error CORS - cannot do request from one port (frontend) to another port (backend):
+into backend project - npm install cors
