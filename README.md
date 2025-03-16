@@ -142,3 +142,54 @@ the info about created user
 
 For not to change body email... - before sending Insomnia request with the same body - delete
 user from mongodb compass
+
+To Frontend:
+
+file axios.js
+import axios from 'axios'
+
+const instance = axios.create({
+baseUrl: 'http://localhost:5000'
+});
+
+export default instance;
+
+To Check frontend -> backend:
+import axios from './axios'
+
+export const Home = () => {
+React.useEffect(() => {
+axios.get('/posts');
+}, [])
+}
+
+Handler function for button login:
+import axios from './axios'
+
+const navigate = useNavigate()
+const onSubmit = async () => {
+try {
+// send to server your request
+setLoading(true);
+
+        // get from this request data
+        // do request to axios and pass to if fields (from loginValidation):
+        const fields = {
+            title,
+            imageUrl,
+            tags
+        };
+
+        // pass data to backend:
+        const { data } = await axios.post('/login', fields);
+        // get id from backend:
+        const id = data._id;
+
+        // move to the post finding in database
+        navigate(`/posts/${id}`);
+
+    } catch (error) {
+        dd
+    }
+
+}

@@ -16,7 +16,8 @@ import bcrypt from 'bcryptjs';
 import { validationResult } from 'express-validator' 
 
 import { registrationValidation } from './validations/auth.js' 
-import UserModel from './models/User.js'
+import UserModel from './models/User.js' 
+import checkAuth from './utils/checkAuth.js'
 
 // then - check if connection to mongodb is real 
 // after saving code in IDE console: You are connected to database 
@@ -231,12 +232,28 @@ app.post('/registration', registrationValidation, async (request, response) => {
 
 // check if can get info about oneself: 
 // if this user using token can get info about his profile 
-// folder utils/checkAuth.js
-app.get('/auth/me', (request, response) => {
-    try {
-        dd
+// folder utils/checkAuth.js 
+// in Insomnia - GET: http://localhost:5000/auth/me 
+// if checkAuth ok with next it pass to the further body (try-catch) 
+// auth/me request tells if I am authorized or not 
+// REST API (backend) CRUD (create (post), read (GET: /posts/:id) - id - dynamic parameter, update (edit), delete)
+app.get('/auth/me', checkAuth, async (request, response) => {
+    try { 
+        // get user id and find in database string by id
+        const user = await UserModel.findById(request.userId); 
+        
+        if (!user) {
+            return response.status(404).json({
+                message: 'User not found'
+            });
+        }
+        const { passwordHash, ...userData } = user._doc;
+
+        response.json(userData);
     } catch (error) {
-        gg
+        response.status(500).json({
+            message: 'Do not have access',
+        });
     }
 });
 
