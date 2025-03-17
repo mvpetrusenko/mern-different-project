@@ -171,7 +171,7 @@ app.post('/registration', registrationValidation, async (request, response) => {
         // prepare document for user registration: 
         // to email will be passed request.body.email 
         // in Insomnia password is passed like '1234' because frontend do not have to crypt password, but 
-        // backend have to crypt password - npm install bcrypt
+        // backend have to crypt password - npm install bcrypt /
     
         const doc = new UserModel({
             email: request.body.email, 
